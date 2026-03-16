@@ -1,1 +1,0 @@
-# muryganova_c
