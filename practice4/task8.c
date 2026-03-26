@@ -1,12 +1,13 @@
 #include <stdio.h>
 
 int main() {
-    int num = 10;
+    int num = 111;
     int *ptr = &num;
+    int **ptr2 = &ptr;
     
     printf("До изменения: %d\n", num);
     
-    *ptr = 20;
+    **ptr2 = 777;
     
     printf("После изменения: %d\n", num);
     
