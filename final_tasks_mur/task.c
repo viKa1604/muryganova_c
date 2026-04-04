@@ -11,6 +11,22 @@ struct Person {
     int birth_year;
 };
 
+// Глобальные переменные
+struct Person *people = NULL;
+int total_count = 0;
+
+// Прототипы функций
+int is_valid_name(char *name);
+struct Person* add_person();
+void print_all();
+void sort_by_name();
+void sort_by_age();
+void show_statistics();
+void search_by_name();
+void search_by_age_range();
+void save_to_file();
+void load_from_file();
+
 int is_valid_name(char *name) {
     for (int i = 0; name[i] != '\0'; i++) {
         if (!isalpha(name[i])) {
@@ -21,7 +37,7 @@ int is_valid_name(char *name) {
 }
 
 // Добавление новой записи (ввод с клавиатуры)
-struct Person* add_person(struct Person *people, int *total_count) {
+struct Person* add_person() {
     struct Person new_person;
     printf("Введите имя: ");
     scanf("%s", new_person.name);
@@ -49,16 +65,17 @@ struct Person* add_person(struct Person *people, int *total_count) {
     printf("Введите год рождения: ");
     scanf("%d", &new_person.birth_year);
     
-    people = realloc(people, (*total_count + 1) * sizeof(struct Person));
-    people[*total_count] = new_person;
-    (*total_count)++;
+    people = realloc(people, (total_count + 1) * sizeof(struct Person));
+    people[total_count] = new_person;
+    total_count++;
     
     printf("Человек успешно добавлен!\n");
     
     return people;
 }
+
 // Функция вывода всех записей
-void print_all(struct Person *people, int total_count) {
+void print_all() {
     if (total_count == 0) {
         printf("Записей не найдено.\n");
         return;
@@ -66,12 +83,14 @@ void print_all(struct Person *people, int total_count) {
     
     printf("\n----- Все люди -----\n");
     for (int i = 0; i < total_count; i++) {
-        printf("%d. %s | Возраст: %d | Рост: %.2f | Год рождения: %d\n", i + 1, people[i].name, people[i].age, people[i].height, people[i].birth_year);
+        printf("%d. %s | Возраст: %d | Рост: %.2f | Год рождения: %d\n", 
+               i + 1, people[i].name, people[i].age, people[i].height, people[i].birth_year);
     }
     printf("\n");
 }
+
 // Сортировка записей (по имени)
-void sort_by_name(struct Person *people, int total_count) {
+void sort_by_name() {
     if (total_count <= 1) return;
     
     for (int i = 0; i < total_count - 1; i++) {
@@ -85,8 +104,9 @@ void sort_by_name(struct Person *people, int total_count) {
     }
     printf("Отсортировано по имени успешно!\n");
 }
+
 // Сортировка записей (по возрасту)
-void sort_by_age(struct Person *people, int total_count) {
+void sort_by_age() {
     if (total_count <= 1) return;
     
     for (int i = 0; i < total_count - 1; i++) {
@@ -100,8 +120,9 @@ void sort_by_age(struct Person *people, int total_count) {
     }
     printf("Отсортировано по возрасту успешно!\n");
 }
+
 // Статистика (средний возраст и максимальный рост)
-void show_statistics(struct Person *people, int total_count) {
+void show_statistics() {
     if (total_count == 0) {
         printf("Нет записей для статистики.\n");
         return;
@@ -125,7 +146,7 @@ void show_statistics(struct Person *people, int total_count) {
     printf("Всего человек: %d\n", total_count);
 }
 // Поиск по имени
-void search_by_name(struct Person *people, int total_count) {
+void search_by_name() {
     if (total_count == 0) {
         printf("Нет записей для поиска.\n");
         return;
@@ -138,7 +159,8 @@ void search_by_name(struct Person *people, int total_count) {
     int found = 0;
     for (int i = 0; i < total_count; i++) {
         if (strcmp(people[i].name, search_name) == 0) {
-            printf("Найдено: %s | Возраст: %d | Рост: %.2f | Год рождения: %d\n", people[i].name, people[i].age, people[i].height, people[i].birth_year);
+            printf("Найдено: %s | Возраст: %d | Рост: %.2f | Год рождения: %d\n", 
+                   people[i].name, people[i].age, people[i].height, people[i].birth_year);
             found = 1;
         }
     }
@@ -147,8 +169,9 @@ void search_by_name(struct Person *people, int total_count) {
         printf("Человек с именем '%s' не найден.\n", search_name);
     }
 }
-// Поиск по диапазону роста
-void search_by_age_range(struct Person *people, int total_count) {
+
+// Поиск по диапазону возраста
+void search_by_age_range() {
     if (total_count == 0) {
         printf("Нет записей для поиска.\n");
         return;
@@ -165,7 +188,8 @@ void search_by_age_range(struct Person *people, int total_count) {
     
     for (int i = 0; i < total_count; i++) {
         if (people[i].age >= min_age && people[i].age <= max_age) {
-            printf("%s | Возраст: %d | Рост: %.2f | Год рождения: %d\n", people[i].name, people[i].age, people[i].height, people[i].birth_year);
+            printf("%s | Возраст: %d | Рост: %.2f | Год рождения: %d\n", 
+                   people[i].name, people[i].age, people[i].height, people[i].birth_year);
             found = 1;
         }
     }
@@ -174,8 +198,9 @@ void search_by_age_range(struct Person *people, int total_count) {
         printf("Люди в этом возрастном диапазоне не найдены.\n");
     }
 }
+
 // Сохранение в бинарный файл
-void save_to_file(struct Person *people, int total_count) {
+void save_to_file() {
     if (total_count == 0) {
         printf("Нет данных для сохранения.\n");
         return;
@@ -196,35 +221,46 @@ void save_to_file(struct Person *people, int total_count) {
 }
 
 // Загрузка из бинарного файла
-struct Person* load_from_file(struct Person *people, int *total_count) {
+void load_from_file() {
     free(people);
     
     FILE *file = fopen("people.dat", "rb");
     //Проверка ошибок открытия файла
     if (file == NULL) {
         printf("Сохраненный файл не найден.\n");
-        *total_count = 0;
-        return NULL;
+        total_count = 0;
+        people = NULL;
+        return;
     }
     
-    fread(total_count, sizeof(int), 1, file);
+    fread(&total_count, sizeof(int), 1, file);
     
-    people = malloc(*total_count * sizeof(struct Person));
+    people = malloc(total_count * sizeof(struct Person));
     
-    fread(people, sizeof(struct Person), *total_count, file);
+    fread(people, sizeof(struct Person), total_count, file);
     
     fclose(file);
-    printf("Загружено %d записей из файла people.dat\n", *total_count);
-    
-    return people;
+    printf("Загружено %d записей из файла people.dat\n", total_count);
 }
 
 // Основное
 int main() {
-    struct Person *people = NULL;
-    int total_count = 0;
     int choice;
-
+    
+    // Массив указателей на функции
+    void (*menu_functions[10])() = {
+        NULL,  // индекс 0 не используется
+        add_person,
+        print_all,
+        sort_by_name,
+        sort_by_age,
+        show_statistics,
+        search_by_name,
+        search_by_age_range,
+        save_to_file,
+        load_from_file
+    };
+    
     // Меню
     do {
         printf("\n----- МЕНЮ -----\n");
@@ -240,41 +276,14 @@ int main() {
         printf("10. Выход\n");
         printf("Выбор: ");
         scanf("%d", &choice);
-
-        // Реализация меню (не через массив а через свич кейс)
-        switch(choice) {
-            case 1:
-                people = add_person(people, &total_count);
-                break;
-            case 2:
-                print_all(people, total_count);
-                break;
-            case 3:
-                sort_by_name(people, total_count);
-                break;
-            case 4:
-                sort_by_age(people, total_count);
-                break;
-            case 5:
-                show_statistics(people, total_count);
-                break;
-            case 6:
-                search_by_name(people, total_count);
-                break;
-            case 7:
-                search_by_age_range(people, total_count);
-                break;
-            case 8:
-                save_to_file(people, total_count);
-                break;
-            case 9:
-                people = load_from_file(people, &total_count);
-                break;
-            case 10:
-                printf("До свидания!\n");
-                break;
-            default:
-                printf("Неверный выбор!\n");
+        
+        // Вызов функции через массив указателей
+        if (choice >= 1 && choice <= 9) {
+            menu_functions[choice]();
+        } else if (choice == 10) {
+            printf("До свидания!\n");
+        } else {
+            printf("Неверный выбор!\n");
         }
         
     } while (choice != 10);
