@@ -11,21 +11,10 @@ struct Person {
     int birth_year;
 };
 
-// Глобальные переменные
 struct Person *people = NULL;
 int total_count = 0;
 
-// Прототипы функций
-int is_valid_name(char *name);
-struct Person* add_person();
-void print_all();
-void sort_by_name();
-void sort_by_age();
-void show_statistics();
-void search_by_name();
-void search_by_age_range();
-void save_to_file();
-void load_from_file();
+
 
 int is_valid_name(char *name) {
     for (int i = 0; name[i] != '\0'; i++) {
@@ -37,7 +26,7 @@ int is_valid_name(char *name) {
 }
 
 // Добавление новой записи (ввод с клавиатуры)
-struct Person* add_person() {
+void add_person() {
     struct Person new_person;
     printf("Введите имя: ");
     scanf("%s", new_person.name);
@@ -71,7 +60,6 @@ struct Person* add_person() {
     
     printf("Человек успешно добавлен!\n");
     
-    return people;
 }
 
 // Функция вывода всех записей
